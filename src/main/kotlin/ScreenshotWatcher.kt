@@ -63,6 +63,11 @@ object ScreenshotWatcher {
             val qz = matcher.group(6).toDouble()
             val qw = matcher.group(7).toDouble()
 
+//            val qw = matcher.group(4).toDouble()
+//            val qx = matcher.group(5).toDouble()
+//            val qy = matcher.group(6).toDouble()
+//            val qz = matcher.group(7).toDouble()
+
 
             println("ScreenshotWatcher: Plotting position ($x, $y, $z) and quaternion ($qx, $qy, $qz, $qw) from $filename")
             UIHandler.plot(x, y, z, qx, qy, qz, qw)

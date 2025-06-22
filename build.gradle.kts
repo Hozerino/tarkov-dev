@@ -17,18 +17,11 @@ repositories {
 }
 
 dependencies {
-    // Note, if you develop a library, you should use compose.desktop.common.
-    // compose.desktop.currentOs should be used in launcher-sourceSet
-    // (in a separate module for demo project and in testMain).
-    // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
     implementation("org.java-websocket:Java-WebSocket:1.5.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     implementation("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:0.7.70")
-
-//    implementation("org.apache.xmlgraphics:batik-transcoder:1.17")
-//    implementation("org.apache.xmlgraphics:batik-codec:1.17")
 
 
 }
@@ -43,4 +36,32 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+// Create a fat (uber) jar with dependencies and resources bundled
+tasks.register<Jar>("fatJar") {
+    group = "build"
+    description = "Create a fat jar including all dependencies and resources"
+
+    manifest {
+        attributes["Main-Class"] = "MainKt"  // Your main class here
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    val runtimeClasspath = configurations.runtimeClasspath.get()
+    from(files(runtimeClasspath.map { if (it.isDirectory) it else zipTree(it) }))
+
+    // Include compiled Kotlin classes
+    from(sourceSets.main.get().output)
+
+    // Include resources (automatically from src/main/resources)
+    from(sourceSets.main.get().resources)
+
+    archiveBaseName.set("tarkov-compose-all")
+    archiveVersion.set(version.toString())
+    archiveClassifier.set("")
+
+    // Optional: you can specify output directory
+    destinationDirectory.set(layout.buildDirectory.dir("libs"))
 }
