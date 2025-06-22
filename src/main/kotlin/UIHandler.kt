@@ -1,22 +1,15 @@
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlin.math.*
 
 object UIHandler {
-    // --- Old code ---
-    // var position by mutableStateOf(Triple(0.0, 0.0, 0.0))
-    //     private set
 
-    // fun plot(x: Double, y: Double, z: Double) {
-    //     println("🧭 Plotting position: x=$x, y=$y, z=$z")
-    //     position = Triple(x, y, z)
-    // }
-
-    // --- New image-based plotting ---
     var currentMap: MapMetadata = MapRegistry.defaultMap
         private set
 
     var relativePosition: Pair<Float, Float>? by mutableStateOf(null)
+    var lookQuaternion: Quadruple<Double, Double, Double, Double>? by mutableStateOf(null) // (qx,qy,qz,qw)
 
     fun setMap(name: String) {
         MapRegistry.maps[name.lowercase()]?.let {
@@ -24,22 +17,22 @@ object UIHandler {
         }
     }
 
-    fun plot(x: Double, y: Double, z: Double) {
-        println("Plot called with x=$x, z=$z")
-        println("Map bounds: ${currentMap.bounds}")
+    fun plot(x: Double, y: Double, z: Double, qx: Double, qy: Double, qz: Double, qw: Double) {
+        // ... existing position rotation and mapping logic
 
         val (rotX, rotZ) = rotateCoordinates(x, z, currentMap.coordinateRotation)
-        println("Rotated coords: x=$rotX, z=$rotZ")
-
         relativePosition = mapPositionToImage(rotX, rotZ, currentMap)
-        println("Relative position on image: $relativePosition")
+
+        // Store quaternion for look direction arrow
+        lookQuaternion = Quadruple(qx, qy, qz, qw)
     }
 
+    // Helper data class for 4 values (since Kotlin doesn't have Quadruple by default)
+    data class Quadruple<A,B,C,D>(val x: A, val y: B, val z: C, val w: D)
 
     private fun mapPositionToImage(x: Double, z: Double, map: MapMetadata): Pair<Float, Float> {
         // Rotate world coords by -coordinateRotation degrees
-        val rotation = -map.coordinateRotation
-        val (rotX, rotZ) = rotateCoordinates(x, z, rotation)
+        val rotation = map.coordinateRotation
 
         // Rotate both bounds corners by same rotation
         val (x1, z1) = rotateCoordinates(map.bounds.first.first, map.bounds.first.second, rotation)
@@ -50,16 +43,16 @@ object UIHandler {
         val minZ = minOf(z1, z2)
         val maxZ = maxOf(z1, z2)
 
-        val relativeX = ((rotX - minX) / (maxX - minX)).toFloat()
-        val relativeY = (1f - ((rotZ - minZ) / (maxZ - minZ))).toFloat() // top-down image axis
+        val relativeX = ((x - minX) / (maxX - minX)).toFloat()
+        val relativeY = (1f - ((z - minZ) / (maxZ - minZ))).toFloat() // top-down image axis
 
         return relativeX to relativeY
     }
 
     private fun rotateCoordinates(x: Double, z: Double, degrees: Int): Pair<Double, Double> {
         val radians = Math.toRadians(degrees.toDouble())
-        val cos = kotlin.math.cos(radians)
-        val sin = kotlin.math.sin(radians)
+        val cos = cos(radians)
+        val sin = sin(radians)
 
         val rotX = x * cos - z * sin
         val rotZ = x * sin + z * cos
@@ -67,4 +60,13 @@ object UIHandler {
         return rotX to rotZ
     }
 
+    /**
+     * Converts quaternion (x,y,z,w) to yaw (rotation around vertical axis), in radians
+     */
+    private fun quaternionToYaw(qx: Double, qy: Double, qz: Double, qw: Double): Double {
+        // Formula for yaw from quaternion
+        val siny_cosp = 2.0 * (qw * qy + qx * qz)
+        val cosy_cosp = 1.0 - 2.0 * (qy * qy + qx * qx)
+        return atan2(siny_cosp, cosy_cosp)
+    }
 }

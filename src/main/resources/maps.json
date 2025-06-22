@@ -1,0 +1,62 @@
+{
+  "factory": {
+    "name": "Factory",
+    "imagefile": "Factory.png",
+    "bounds": [[-67, 69], [76.6, -65.5]],
+    "coordinateRotation": 90
+  },
+  "customs": {
+    "name": "Customs",
+    "imagefile": "Customs.png",
+    "bounds": [[698, -307], [-371, 237]],
+    "coordinateRotation": 180
+  },
+  "woods": {
+    "name": "Woods",
+    "imagefile": "Woods.png",
+    "bounds": [[650, -945], [-695, 470]],
+    "coordinateRotation": 180
+  },
+  "shoreline": {
+    "name": "Shoreline",
+    "imagefile": "Shoreline.png",
+    "bounds": [[506, -405], [-1060, 618]],
+    "coordinateRotation": 180
+  },
+  "interchange": {
+    "name": "Interchange",
+    "imagefile": "Interchange.png",
+    "bounds": [[530, -439], [-364, 452]],
+    "coordinateRotation": 180
+  },
+  "lab": {
+    "name": "The Lab",
+    "imagefile": "Labs.png",
+    "bounds": [[-91, -477], [-287, -193]],
+    "coordinateRotation": 270
+  },
+  "reserve": {
+    "name": "Reserve",
+    "imagefile": "Reserve.png",
+    "bounds": [[289, -338], [-303, 336]],
+    "coordinateRotation": 180
+  },
+  "lighthouse": {
+    "name": "Lighthouse",
+    "imagefile": "Lighthouse.png",
+    "bounds": [[515, -1000], [-545, 725]],
+    "coordinateRotation": 180
+  },
+  "streetsoftarkov": {
+    "name": "Streets of Tarkov",
+    "imagefile": "StreetsOfTarkov.png",
+    "bounds": [[323, -317], [-280, 549]],
+    "coordinateRotation": 180
+  },
+  "groundzero": {
+    "name": "Ground Zero",
+    "imagefile": "GroundZero.png",
+    "bounds": [[249, -124], [-99, 364]],
+    "coordinateRotation": 180
+  }
+}
