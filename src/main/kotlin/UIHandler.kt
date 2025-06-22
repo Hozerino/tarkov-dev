@@ -5,7 +5,7 @@ import kotlin.math.*
 
 object UIHandler {
 
-    var currentMap: MapMetadata = MapRegistry.defaultMap
+    var currentMap: MapMetadata by mutableStateOf(MapRegistry.defaultMap)
         private set
 
     var relativePosition: Pair<Float, Float>? by mutableStateOf(null)

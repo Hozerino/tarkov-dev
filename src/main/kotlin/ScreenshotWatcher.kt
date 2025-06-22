@@ -1,9 +1,13 @@
+import jdk.jfr.internal.consumer.EventLog.stop
+import sun.awt.shell.ShellFolder
+import java.io.File
 import java.nio.file.*
 import java.util.regex.Pattern
 import kotlin.concurrent.thread
 
 object ScreenshotWatcher {
-    var watchDir: Path = Paths.get("C:/Users/Hozer/Documents/Escape from Tarkov/Screenshots")
+//    var watchDir: Path = Paths.get("C:/Users/Hozer/Documents/Escape from Tarkov/Screenshots")
+    var watchDir: Path = Paths.get("${System.getProperty("user.home")}${File.separatorChar}Documents${File.separatorChar}Escape from Tarkov${File.separatorChar}Screenshots" )
     private val filenamePattern = Pattern.compile(
         """_(-?\d+\.?\d*),\s*(-?\d+\.?\d*),\s*(-?\d+\.?\d*)_""" +                 // x,y,z position
                 """(-?\d+\.?\d*),\s*(-?\d+\.?\d*),\s*(-?\d+\.?\d*),\s*(-?\d+\.?\d*)_""" +  // qx, qy, qz, qw quaternion
